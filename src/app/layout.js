@@ -1,5 +1,6 @@
 import { Inter } from "next/font/google";
 import "./globals.css";
+import Head from "next/head";
 
 const inter = Inter({ subsets: ["latin"] });
 
@@ -11,12 +12,16 @@ export const metadata = {
 export default function RootLayout({ children }) {
   return (
     <html lang="en">
+      <Head>
+        <meta charSet="UTF-8" />
+        <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+        <meta name="description" content={metadata.description} />
+        <title>Cat Data</title>
+      </Head>
       <body className={inter.className}>
         <main className="flex min-h-screen flex-col items-center justify-between p-2">
           <div className="bg-white w-10/12">
-            <div className="mx-auto px-4 py-8 sm:px-6 sm:py-16 ">
-              {children}
-            </div>
+            <div className="mx-auto px-4 py-8 sm:px-6 sm:py-10">{children}</div>
           </div>
         </main>
       </body>

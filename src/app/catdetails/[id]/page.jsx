@@ -3,30 +3,39 @@ import Image from "next/image";
 import { useState, useEffect } from "react";
 import Link from "next/link";
 import { FaArrowLeft } from "react-icons/fa";
+import Loading from "@/app/Loading";
 
 const catDetails = ({ params }) => {
-  const [show, setShow] = useState(false);
-  const [show2, setShow2] = useState(false);
+  const [loading, setLoading] = useState(true);
   const [details, setDetails] = useState({});
   const { id } = params;
 
-  const singleCatDetails = async () => {
-    const response = await fetch(`https://api.thecatapi.com/v1/images/${id}`, {
-      method: "GET",
-      headers: {
-        "Content-Type": "application/json",
-        "x-api-key":
-          "live_XEkUa5070NBdTbXLNsxQ2YtHLDi51hO2SRfUkfKOgMvhWuaYZ1amzEivZ6f5HYFf",
-      },
-    });
-    if (!response) {
-      throw new Error("cats data fetching error is ocurred");
-    }
-    const data = await response.json();
-    setDetails(data);
-  };
-
+ 
   useEffect(() => {
+    const singleCatDetails = async () => {
+      try {
+        const response = await fetch(
+          `https://api.thecatapi.com/v1/images/${id}`,
+          {
+            method: 'GET',
+            headers: {
+              'Content-Type': 'application/json',
+              'x-api-key': 'live_XEkUa5070NBdTbXLNsxQ2YtHLDi51hO2SRfUkfKOgMvhWuaYZ1amzEivZ6f5HYFf',
+            },
+          }
+        );
+        if (!response.ok) {
+          throw new Error('Failed to fetch cat data');
+        }
+        const data = await response.json();
+        setDetails(data);
+      } catch (error) {
+        console.error('Error fetching cat data:', error);
+      } finally {
+        setLoading(false);
+      }
+    };
+
     singleCatDetails();
   }, []);
 
@@ -34,18 +43,19 @@ const catDetails = ({ params }) => {
 
   return (
     <>
-      <Link href="/" className="float-left">
+      <div className="flex justify-between items-center" >
+      <Link href="/" className="float-left text-center">
         <FaArrowLeft />
       </Link>
-      <h1 className="text-2xl text-center font-bold tracking-tight text-gray-900">
-        Cats Details
-      </h1>
-      <div className="md:flex items-start justify-center py-12 2xl:px-20 md:px-6 px-4">
+       <h1 className="text-2xl text-center font-bold tracking-tight text-gray-900"> Cats Details </h1>
+        <div></div>
+      </div>
+     {loading ? <Loading /> : <div className="md:flex items-center justify-center py-12 2xl:px-20 md:px-6 px-4">
         <div className="xl:w-2/6 lg:w-2/5 w-80">
           <Image
             width={250}
             height={400}
-            className="w-full"
+            // className="w-full"
             alt="img of a girl posing"
             src={details?.url}
           />
@@ -134,7 +144,7 @@ const catDetails = ({ params }) => {
             </Link>
           )}
         </div>
-      </div>
+      </div>}
     </>
   );
 };
