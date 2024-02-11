@@ -35,11 +35,8 @@ const catDetails = ({ params }) => {
         setLoading(false);
       }
     };
-
     singleCatDetails();
   }, []);
-
-  console.log(details);
 
   return (
     <>
